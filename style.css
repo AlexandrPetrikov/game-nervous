@@ -1,0 +1,80 @@
+.game-block{
+	width:1000px;
+	height:500px;
+	background: #D6CACA;
+	display:inline-block;
+	float:left;
+	position:relative;
+	border:2px solid black;
+}
+.prime{
+	width:100px;
+	height:100px;
+	background: #3D4B82;
+	position:absolute;
+	left:0px;
+	top:0px;
+	border:0;
+	z-index:100;
+}
+.panel-control{
+	display:inline-block;
+	float:left;
+	width:300px;
+	height:500px;
+	background: #95585A;
+	position:relative;
+}
+button{
+	position:absolute;
+	width:50px;
+	height:50px;
+	outline:none;
+	border:none;
+}
+button[class=center]{
+	background: #8C8BC8;
+	top:70px;
+	left:100px;
+	z-index:100;
+}
+button[class=top]{
+	background: #8C8BC8;
+	top:20px;
+	left:100px;
+	box-shadow:0 0 20px black;
+}
+button[class=right]{
+	background: #8C8BC8;
+	top:70px;
+	left:150px;
+	box-shadow:0 0 20px black;
+}
+button[class=bottom]{
+	background: #8C8BC8;
+	top:120px;
+	left:100px;
+	box-shadow:0 0 20px black;
+}
+button[class=left]{
+	background: #8C8BC8;
+	top:70px;
+	left:50px;
+	box-shadow:0 0 20px black;
+}
+
+.score{
+	position:absolute;
+	top:300px;
+	left:40px;
+}
+.mission{
+	background: #000;
+	display:inline-block;
+	position:relative;
+	top:0;
+	left:0;
+	width:10px;
+	height:10px;
+}
+
