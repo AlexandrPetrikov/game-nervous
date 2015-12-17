@@ -24,9 +24,10 @@ var runRight = 0;
 var runTop = 0;
 var runBottom = 0;
 
+
+
 $(document).keyup(function(e){
 	var code = e.keyCode;
-	console.log(code);
 	switch(code){
 		case 37:
 			left.trigger('click');
@@ -41,15 +42,12 @@ $(document).keyup(function(e){
 			bottom.trigger('click');
 			break;
 		case 32:
-			center.trigger('click');
+			center.trigger('click');//pause and run game
 			break;
 	}
 	
 })
-function fixWorkPanel(){
-		$("#center").text("P");		
-		target();
-}
+
 
 function target(){
 		clearInterval(missionAnim);
@@ -69,15 +67,6 @@ function target(){
 target();
 
 right.on('click',function(){
-	/*if dblclick return false, mission not stop*/
-	runLeft = 0;
-	runTop = 0;
-	runBottom = 0;
-	if(runRight>1){
-		return false;
-	}
-	runRight++;
-	/*-------------------------------------------*/
 	var maxLine = workWidth - primeWidth;
 	clearInterval(animate);
 	animate = setInterval(function(){
@@ -86,7 +75,7 @@ right.on('click',function(){
 			clearInterval(animate);
 			return false;
 		};	
-		prime.css("left", primePos +2);
+		prime.css("left", primePos +5);
 		primePosLeft = primePos;
 		if(rTop>primePosTop && rTop<primePosTop+100 && rLeft>primePosLeft && rLeft<primePosLeft+100){	
 			mission.css({"left":"0px",
@@ -95,22 +84,13 @@ right.on('click',function(){
 			bool=true;
 		};
 	},10);
-	fixWorkPanel();
 	/*for animate panel control*/
 	$(this).parent("div").children("button:not('#center')").css("box-shadow","0 0 20px black");
 	$(this).css("box-shadow","none");
+	$(this).prop("disabled",true).siblings("button").prop("disabled",false);
 });
 
 bottom.on('click',function(){
-	/*if dblclick return false, mission not stop*/
-	runLeft = 0;
-	runTop = 0;
-	runRight = 0;
-	if(runBottom>1){
-		return false;
-	}
-	runBottom++;
-	/*-------------------------------------------*/
 	var maxLine = workHeight - primeHeight;
 	clearInterval(animate);
 	animate = setInterval(function(){
@@ -119,7 +99,7 @@ bottom.on('click',function(){
 			clearInterval(animate);
 			return false;
 		};	
-		prime.css("top", primePos +2);
+		prime.css("top", primePos +5);
 		primePosTop = primePos;
 		if(rTop>primePosTop && rTop<primePosTop+100 && rLeft>primePosLeft && rLeft<primePosLeft+100){	
 			mission.css({"left":"0",
@@ -128,21 +108,12 @@ bottom.on('click',function(){
 			bool=true;
 		};
 	},10);
-	fixWorkPanel();
 	/*for animate panel control*/
 	$(this).parent("div").children("button:not('#center')").css("box-shadow","0 0 20px black");
 	$(this).css("box-shadow","none");
+	$(this).prop("disabled",true).siblings("button").prop("disabled",false);
 });
 left.on('click',function(){
-	/*if dblclick return false, mission not stop*/
-	runRight = 0;
-	runTop = 0;
-	runBottom = 0;
-	if(runLeft>1){
-		return false;
-	}
-	runLeft++;
-	/*-------------------------------------------*/
 	var maxLine = workHeight - primeHeight;
 	clearInterval(animate);
 	animate = setInterval(function(){
@@ -151,7 +122,7 @@ left.on('click',function(){
 			clearInterval(animate);
 			return false;
 		};	
-		prime.css("left", primePos - 2);
+		prime.css("left", primePos - 5);
 		primePosLeft = primePos;
 		if(rTop>primePosTop && rTop<primePosTop+100 && rLeft>primePosLeft && rLeft<primePosLeft+100){	
 			mission.css({"left":"0",
@@ -160,21 +131,12 @@ left.on('click',function(){
 			bool=true;
 		};
 	},10);
-	fixWorkPanel();
 	/*for animate panel control*/
 	$(this).parent("div").children("button:not('#center')").css("box-shadow","0 0 20px black");
 	$(this).css("box-shadow","none");
+	$(this).prop("disabled",true).siblings("button").prop("disabled",false);
 });
 top.on('click',function(){
-	/*if dblclick return false, mission not stop*/
-	runRight = 0;
-	runLeft = 0;
-	runBottom = 0;
-	if(runTop>1){
-		return false;
-	}
-	runTop++;
-	/*-------------------------------------------*/
 	var maxLine = workHeight - primeHeight;
 	clearInterval(animate);
 	animate = setInterval(function(){
@@ -183,7 +145,7 @@ top.on('click',function(){
 			clearInterval(animate);
 			return false;
 		};	
-		prime.css("top", primePos - 2);
+		prime.css("top", primePos - 5);
 		primePosTop = primePos;
 		if(rTop>primePosTop && rTop<primePosTop+100 && rLeft>primePosLeft && rLeft<primePosLeft+100){	
 			mission.css({"left":"0",
@@ -192,29 +154,26 @@ top.on('click',function(){
 			bool=true;
 		};
 	},10);
-	fixWorkPanel();
 	/*for animate panel control*/
 	$(this).parent("div").children("button:not('#center')").css("box-shadow","0 0 20px black");
 	$(this).css("box-shadow","none");
+	$(this).prop("disabled",true).siblings("button").prop("disabled",false);
 });
 $("#center").on('click',function(){
-	/*if dblclick return false, mission not stop*/
-	runLeft = 0;
-	runTop = 0;
-	runBottom = 0;
-	runRight = 0;
-	/*-------------------------------------------*/
 	clearInterval(animate);
 	if($(this).text()=="P"){
 		$(this).text("R");
+		$(this).siblings("button").prop("disabled",true);
 		clearInterval(missionAnim);
 	}else{
+		$(this).siblings("button").prop("disabled",false);
 		$(this).text("P");
 		target();
 	};
 	/*for animate panel control*/
 	$("#left, #top, #bottom").attr("data-shadow","none");
 	$(this).parent("div").children("button:not('#center')").css("box-shadow","0 0 20px black");
+	
 });
 
 });

@@ -68,6 +68,10 @@ button[class=left]{
 	top:300px;
 	left:40px;
 }
+.score::selection{
+	color:white;
+	background:black;
+}
 .mission{
 	background: #000;
 	display:inline-block;
