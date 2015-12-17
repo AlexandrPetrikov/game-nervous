@@ -1,9 +1,4 @@
 $(document).ready(function(){
-var right = $("#right");
-var left = $("#left");
-var top = $("#top");
-var bottom = $("#bottom");
-var center = $("#center");
 var animate;
 var missionAnim;
 var workWidth = $("#game-block").width();
@@ -16,33 +11,26 @@ var primeHeight = $("#prime").height();
 var mission = $("#mission");
 var rTop;
 var rLeft;
-var currNum = 0;
 var bool = false;
-/*for control move primary and interval missionAnim*/
-var runLeft = 0;
-var runRight = 0;
-var runTop = 0;
-var runBottom = 0;
-
 
 
 $(document).keyup(function(e){
 	var code = e.keyCode;
 	switch(code){
 		case 37:
-			left.trigger('click');
+			$("#left:not(:disabled)").trigger('click');
 			break;
 		case 38:
-			top.trigger('click');
+			$("#top:not(:disabled)").trigger('click');
 			break;
 		case 39:
-			right.trigger('click');
+			$("#right:not(:disabled)").trigger('click');
 			break;
 		case 40:
-			bottom.trigger('click');
+			$("#bottom:not(:disabled)").trigger('click');
 			break;
 		case 32:
-			center.trigger('click');//pause and run game
+			$("#center").trigger('click');//pause and run game
 			break;
 	}
 	
@@ -52,21 +40,21 @@ $(document).keyup(function(e){
 function target(){
 		clearInterval(missionAnim);
 		missionAnim = setInterval(function(){
+		//for increment score
 		if(bool){
-			currNum++;
-			$("#score label").text(currNum);
+			$("#score label").text(+$("#score label").text()+1);
 			bool = false;
 		}
+		/*----------------*/
 		rTop = Math.floor((Math.random()*490)+1);
 		rLeft = Math.floor((Math.random()*990)+1);
 		mission.css({"top":rTop,
 					 "left":rLeft,
 					 "opacity":"1"});
-	},1000);
-}
+	},1500);
+};
 target();
-
-right.on('click',function(){
+$("#right").on('click',function(){
 	var maxLine = workWidth - primeWidth;
 	clearInterval(animate);
 	animate = setInterval(function(){
@@ -85,12 +73,12 @@ right.on('click',function(){
 		};
 	},10);
 	/*for animate panel control*/
-	$(this).parent("div").children("button:not('#center')").css("box-shadow","0 0 20px black");
-	$(this).css("box-shadow","none");
-	$(this).prop("disabled",true).siblings("button").prop("disabled",false);
+	$(this).css("box-shadow","none").prop("disabled",true)
+		   .siblings("button:not('#center')").css("box-shadow","0 0 20px black")
+		   .prop("disabled",false);
 });
 
-bottom.on('click',function(){
+$("#bottom").on('click',function(){
 	var maxLine = workHeight - primeHeight;
 	clearInterval(animate);
 	animate = setInterval(function(){
@@ -109,12 +97,11 @@ bottom.on('click',function(){
 		};
 	},10);
 	/*for animate panel control*/
-	$(this).parent("div").children("button:not('#center')").css("box-shadow","0 0 20px black");
-	$(this).css("box-shadow","none");
-	$(this).prop("disabled",true).siblings("button").prop("disabled",false);
+	$(this).css("box-shadow","none").prop("disabled",true)
+		   .siblings("button:not('#center')").css("box-shadow","0 0 20px black")
+		   .prop("disabled",false);
 });
-left.on('click',function(){
-	var maxLine = workHeight - primeHeight;
+$("#left").on('click',function(){
 	clearInterval(animate);
 	animate = setInterval(function(){
 	var primePos = parseInt(prime.css("left"));
@@ -132,11 +119,11 @@ left.on('click',function(){
 		};
 	},10);
 	/*for animate panel control*/
-	$(this).parent("div").children("button:not('#center')").css("box-shadow","0 0 20px black");
-	$(this).css("box-shadow","none");
-	$(this).prop("disabled",true).siblings("button").prop("disabled",false);
+	$(this).css("box-shadow","none").prop("disabled",true)
+		   .siblings("button:not('#center')").css("box-shadow","0 0 20px black")
+		   .prop("disabled",false);
 });
-top.on('click',function(){
+$("#top").on('click',function(){
 	var maxLine = workHeight - primeHeight;
 	clearInterval(animate);
 	animate = setInterval(function(){
@@ -155,9 +142,9 @@ top.on('click',function(){
 		};
 	},10);
 	/*for animate panel control*/
-	$(this).parent("div").children("button:not('#center')").css("box-shadow","0 0 20px black");
-	$(this).css("box-shadow","none");
-	$(this).prop("disabled",true).siblings("button").prop("disabled",false);
+	$(this).css("box-shadow","none").prop("disabled",true)
+		   .siblings("button:not('#center')").css("box-shadow","0 0 20px black")
+		   .prop("disabled",false);
 });
 $("#center").on('click',function(){
 	clearInterval(animate);
@@ -166,13 +153,11 @@ $("#center").on('click',function(){
 		$(this).siblings("button").prop("disabled",true);
 		clearInterval(missionAnim);
 	}else{
-		$(this).siblings("button").prop("disabled",false);
-		$(this).text("P");
+		$(this).text("P").siblings("button").prop("disabled",false);
 		target();
 	};
 	/*for animate panel control*/
-	$("#left, #top, #bottom").attr("data-shadow","none");
-	$(this).parent("div").children("button:not('#center')").css("box-shadow","0 0 20px black");
+	$(this).siblings("button:not('#center')").css("box-shadow","0 0 20px black");
 	
 });
 
