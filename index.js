@@ -1,164 +1,136 @@
+function Target(id) {
+	/*Global variables for target*/
+	var marginTop;
+	var marginLeft;
+	/*----------------------------*/
+	this.fly = function(){
+		marginTop=Math.floor((Math.random()*490)+1);
+		marginLeft=Math.floor((Math.random()*990)+1);
+		id.css({'top':marginTop,
+				'left':marginLeft});
+	};
+	this.posY = function(){
+		return marginTop;
+	};
+	this.posX = function(){
+		return marginLeft;
+	};
+	this.killFly = function(killerPosTop, killerPosLeft){
+		if(marginTop > killerPosTop && marginTop < killerPosTop+100 && marginLeft > killerPosLeft && marginLeft < killerPosLeft+100){
+			return true;
+		};
+	};
+};
+function Killer(id){
+	var animateMove;//setInterval for animate move
+	var killerPosLeft;
+	var killerPosTop;
+	var parentTargetWidth = parseInt(id.parent().width());
+	var parentTargetHeight = parseInt(id.parent().height());
+	/*killer move right*/
+	this.right = function(){
+		clearInterval(animateMove);
+		animateMove = setInterval(function(){
+			killerPosLeft = parseInt(id.css('left'));
+			if(parseInt(id.css('left'))<=parentTargetWidth-100){
+				id.css('left',killerPosLeft+1);
+			}else{
+				clearInterval(animateMove);
+			};
+		});
+	};
+	/*killer move bottom*/
+	this.bottom = function(){
+		clearInterval(animateMove);
+		animateMove = setInterval(function(){
+			killerPosTop = parseInt(id.css('top'));
+			if(parseInt(id.css('top'))<=parentTargetHeight-100){
+				id.css('top',killerPosTop+1);
+			}
+		});
+	};
+	/*killer move left*/
+	this.left = function(){
+		clearInterval(animateMove);
+		animateMove = setInterval(function(){
+			killerPosLeft = parseInt(id.css('left'));
+			if(parseInt(id.css('left'))>0){
+				id.css('left',killerPosLeft-1);
+			}else{
+				clearInterval(animateMove);
+			};
+		});
+	};
+	/*killer move top*/
+	this.top = function(){
+		clearInterval(animateMove);
+		animateMove = setInterval(function(){
+			killerPosTop = parseInt(id.css('top'));
+			if(parseInt(id.css('top'))>0){
+				id.css('top',killerPosTop-1);
+			}
+		});
+	};
+	/*killer pause || run*/
+	this.center = function(){
+		clearInterval(animateMove);
+		if($(this).text()=="P"){
+			$(this).text("R");
+			$(this).siblings("button").prop("disabled",true);
+		}else{
+			$(this).text("P").siblings("button").prop("disabled",false);
+		};
+	};
+	this.posY = function(){
+		return killerPosTop;
+	};
+	this.posX = function(){
+		return killerPosLeft;
+	};
+};
 $(document).ready(function(){
-var animate;
-var missionAnim;
-var workWidth = $("#game-block").width();
-var workHeight = $("#game-block").height();
-var prime = $("#prime");
-var primePosLeft;
-var primePosTop;
-var primeWidth = $("#prime").width();
-var primeHeight = $("#prime").height();
-var mission = $("#mission");
-var rTop;
-var rLeft;
-var bool = false;
+var tgAnim;
+var score = $('#score-text');
+	/*new obj killer*/
+var killer = new Killer($('#prime'));
 
 
+	/*control keyup killer*/
 $(document).keyup(function(e){
 	var code = e.keyCode;
 	switch(code){
 		case 37:
-			$("#left:not(:disabled)").trigger('click');
+            killer.left();
 			break;
 		case 38:
-			$("#top:not(:disabled)").trigger('click');
+            killer.top();
 			break;
 		case 39:
-			$("#right:not(:disabled)").trigger('click');
+            killer.right();
 			break;
 		case 40:
-			$("#bottom:not(:disabled)").trigger('click');
+            killer.bottom();
 			break;
 		case 32:
-			$("#center").trigger('click');//pause and run game
+			killer.center();
 			break;
 	}
 	
-})
-
-
-function target(){
-		clearInterval(missionAnim);
-		missionAnim = setInterval(function(){
-		//for increment score
-		if(bool){
-			$("#score label").text(+$("#score label").text()+1);
-			bool = false;
-		}
-		/*----------------*/
-		rTop = Math.floor((Math.random()*490)+1);
-		rLeft = Math.floor((Math.random()*990)+1);
-		mission.css({"top":rTop,
-					 "left":rLeft,
-					 "opacity":"1"});
-	},1500);
+});
+	/*new obj target*/
+var target = new Target($('#target'));
+	/*interval for return coord target and method fly()*/
+function targetAnimate (){
+	clearInterval(tgAnim);
+	tgAnim = setInterval(function(){
+		target.fly();
+	},3000);
+	setInterval(function(){
+		if(target.killFly(killer.posY(),killer.posX())){
+			target.fly();
+			score.text(+score.text()+1);
+		};
+	});
 };
-target();
-$("#right").on('click',function(){
-	var maxLine = workWidth - primeWidth;
-	clearInterval(animate);
-	animate = setInterval(function(){
-	var primePos = parseInt(prime.css("left"));
-		if(primePos >= maxLine){
-			clearInterval(animate);
-			return false;
-		};	
-		prime.css("left", primePos +5);
-		primePosLeft = primePos;
-		if(rTop>primePosTop && rTop<primePosTop+100 && rLeft>primePosLeft && rLeft<primePosLeft+100){	
-			mission.css({"left":"0px",
-						 "top":"0px",
-				 		 "opacity":"0"});
-			bool=true;
-		};
-	},10);
-	/*for animate panel control*/
-	$(this).css("box-shadow","none").prop("disabled",true)
-		   .siblings("button:not('#center')").css("box-shadow","0 0 20px black")
-		   .prop("disabled",false);
-});
-
-$("#bottom").on('click',function(){
-	var maxLine = workHeight - primeHeight;
-	clearInterval(animate);
-	animate = setInterval(function(){
-	var primePos = parseInt(prime.css("top"));
-		if(primePos >= maxLine){
-			clearInterval(animate);
-			return false;
-		};	
-		prime.css("top", primePos +5);
-		primePosTop = primePos;
-		if(rTop>primePosTop && rTop<primePosTop+100 && rLeft>primePosLeft && rLeft<primePosLeft+100){	
-			mission.css({"left":"0",
-						 "top":"0",
-				 		 "opacity":"0"});
-			bool=true;
-		};
-	},10);
-	/*for animate panel control*/
-	$(this).css("box-shadow","none").prop("disabled",true)
-		   .siblings("button:not('#center')").css("box-shadow","0 0 20px black")
-		   .prop("disabled",false);
-});
-$("#left").on('click',function(){
-	clearInterval(animate);
-	animate = setInterval(function(){
-	var primePos = parseInt(prime.css("left"));
-		if(primePos <= 0){
-			clearInterval(animate);
-			return false;
-		};	
-		prime.css("left", primePos - 5);
-		primePosLeft = primePos;
-		if(rTop>primePosTop && rTop<primePosTop+100 && rLeft>primePosLeft && rLeft<primePosLeft+100){	
-			mission.css({"left":"0",
-						 "top":"0",
-				 	     "opacity":"0"});
-			bool=true;
-		};
-	},10);
-	/*for animate panel control*/
-	$(this).css("box-shadow","none").prop("disabled",true)
-		   .siblings("button:not('#center')").css("box-shadow","0 0 20px black")
-		   .prop("disabled",false);
-});
-$("#top").on('click',function(){
-	var maxLine = workHeight - primeHeight;
-	clearInterval(animate);
-	animate = setInterval(function(){
-	var primePos = parseInt(prime.css("top"));
-		if(primePos <= 0){
-			clearInterval(animate);
-			return false;
-		};	
-		prime.css("top", primePos - 5);
-		primePosTop = primePos;
-		if(rTop>primePosTop && rTop<primePosTop+100 && rLeft>primePosLeft && rLeft<primePosLeft+100){	
-			mission.css({"left":"0",
-						 "top":"0",
-				 		 "opacity":"0"});
-			bool=true;
-		};
-	},10);
-	/*for animate panel control*/
-	$(this).css("box-shadow","none").prop("disabled",true)
-		   .siblings("button:not('#center')").css("box-shadow","0 0 20px black")
-		   .prop("disabled",false);
-});
-$("#center").on('click',function(){
-	clearInterval(animate);
-	if($(this).text()=="P"){
-		$(this).text("R");
-		$(this).siblings("button").prop("disabled",true);
-		clearInterval(missionAnim);
-	}else{
-		$(this).text("P").siblings("button").prop("disabled",false);
-		target();
-	};
-	/*for animate panel control*/
-	$(this).siblings("button:not('#center')").css("box-shadow","0 0 20px black");
-	
-});
-
+targetAnimate();
 });
